@@ -11,13 +11,19 @@ import TileBase from './TileBase'
 import HexBase from './HexBase';
 import Polygon from './Polygon';
 
+
 // Grids
 import SquareGrid from './SquareGrid'
 import HexGridFlat from './HexGridFlat';
 import HexGridFlatLabels from './HexGridFlatLabels';
 
-// Import maps
-import * as basicMap from './data/maps/Basic'
+
+// HexBase utilites
+import * as polygonUtils from './PolygonUtils'
+
+// Set grid parameters
+
+let [nx,ny,origin,edgeLength]=[10,10,[100,100],40];
 
 
 class App extends Component {
@@ -25,6 +31,13 @@ class App extends Component {
 
 
   render() {
+
+    let hexPoints=polygonUtils.hexGridFlat(nx,ny,origin,edgeLength);
+    console.log(hexPoints)
+
+    let hexFill=hexPoints.map(item=>{
+      return <TileBase center={item} edgeLength={40} borderColor='green' baseColor='yellow'/>
+    });
 
 
 
@@ -36,10 +49,17 @@ class App extends Component {
 
         <h1>Polygons</h1>
 
-        <TileBase edgeLength={100} borderColor='green' baseColor='yellow'>
-        <circle cx="25" cy="25" r="25"/>
-        </TileBase>
 
+
+        <SVG height={2*ny*edgeLength} width={nx*edgeLength*4} style={{ backgroundColor: 'azure'}}>
+
+        <HexGridFlatLabels nx={nx} ny={ny} edgeLength={edgeLength} origin={origin} />
+
+
+          {hexFill}
+
+
+        </SVG>
 
 
 

@@ -104,17 +104,17 @@ export let squareGrid = (nx,ny,dx,dy,origin) => {
 // Outputs an array with center locations for plane-filling flat-topped hexes
 // Using double coordinates as in https://www.redblobgames.com/grids/hexagons/
 // center: a two-component vector labeling the center of the polygon
-// n: number of sides for the polygon (n-gon)
+// nx/ny: number of tiles in x and y directions
 // sidelength: lenth of any one edge of the polygon
 // vertexlength: length of vector from center to any one of the polygon's vertices; used if edgelenth not provided
-export let hexGridFlat = (nx,ny,origin,edgelength,vertexlength) => {
+export let hexGridFlat = (nx,ny,origin,edgeLength,vertexlength) => {
 
 
     let hexhalfangle=1/3*Math.PI;
     
-    if (edgelength) {
-        var dy=edgelength*Math.tan(hexhalfangle)/2;
-        var dx=edgelength+edgelength/Math.cos(hexhalfangle);
+    if (edgeLength) {
+        var dy=edgeLength*Math.tan(hexhalfangle)/2;
+        var dx=edgeLength+edgeLength/Math.cos(hexhalfangle);
     } else {
         var dy=vertexlength*Math.sin(hexhalfangle);
         var dx=2*vertexlength+2*Math.cos(hexhalfangle)*vertexlength;

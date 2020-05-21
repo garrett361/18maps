@@ -13,18 +13,18 @@ import Polygon from './Polygon'
 // nx: number hexagons along x direction
 // ny: number hexagons along y direction
 // origin: 2-component vector marking origin of the grid
-// edgelength: length of hex edge 
-// vertexlength: length from polygon center to vertices; used if no edgelength provided
+// edgeLength: length of hex edge 
+// vertexlength: length from polygon center to vertices; used if no edgeLength provided
 
 
 let HexGridFlatLabels = (props) => {
 
-    let {nx,ny,origin,edgelength,vertexlength} = props;
+    let {nx,ny,origin,edgeLength,vertexlength} = props;
 
     let hexhalfangle=1/3*Math.PI;
-    if (edgelength) {
-        var dy=edgelength*Math.tan(hexhalfangle)/2;
-        var dx=edgelength+edgelength/Math.cos(hexhalfangle);
+    if (edgeLength) {
+        var dy=edgeLength*Math.tan(hexhalfangle)/2;
+        var dx=edgeLength+edgeLength/Math.cos(hexhalfangle);
     } else {
         var dy=vertexlength*Math.sin(hexhalfangle);
         var dx=2*vertexlength+2*Math.cos(hexhalfangle)*vertexlength;
@@ -52,7 +52,7 @@ let HexGridFlatLabels = (props) => {
     let xlabelstop = xpointstop.map((item,i)=>{
 
         return (
-            <text textAnchor="middle" fontSize={edgelength ? edgelength/2 : vertexlength/2} key={item} x={item[0]} y={item[1]} {...props}>
+            <text textAnchor="middle" fontSize={edgeLength ? edgeLength/2 : vertexlength/2} key={item} x={item[0]} y={item[1]} {...props}>
                 {alphabet[i]}
             </text>
         );
@@ -61,7 +61,7 @@ let HexGridFlatLabels = (props) => {
     let xlabelsbottom = xpointsbottom.map((item,i)=>{
 
         return (
-            <text textAnchor="middle" fontSize={edgelength ? edgelength/2 : vertexlength/2} key={item} x={item[0]} y={item[1]} {...props}>
+            <text textAnchor="middle" fontSize={edgeLength ? edgeLength/2 : vertexlength/2} key={item} x={item[0]} y={item[1]} {...props}>
                 {alphabet[i]}
             </text>
         );
@@ -88,7 +88,7 @@ let HexGridFlatLabels = (props) => {
     let ylabelsleft = ypointsleft.map((item,i)=>{
 
         return (
-            <text textAnchor="middle" fontSize={edgelength ? edgelength/2 : vertexlength/2} key={item} x={item[0]} y={item[1]} {...props}>
+            <text textAnchor="middle" fontSize={edgeLength ? edgeLength/2 : vertexlength/2} key={item} x={item[0]} y={item[1]} {...props}>
                 {i+1}
             </text>
         );
@@ -97,7 +97,7 @@ let HexGridFlatLabels = (props) => {
     let ylabelsright = ypointsright.map((item,i)=>{
 
         return (
-            <text textAnchor="middle" fontSize={edgelength ? edgelength/2 : vertexlength/2} key={item} x={item[0]} y={item[1]} {...props}>
+            <text textAnchor="middle" fontSize={edgeLength ? edgeLength/2 : vertexlength/2} key={item} x={item[0]} y={item[1]} {...props}>
                 {i+1}
             </text>
         );

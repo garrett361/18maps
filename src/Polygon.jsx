@@ -19,11 +19,11 @@ let Polygon = (props) => {
  
     // Polygon vertices in coordinate pairs as 2-components arrays within arrays, e.g.
     // vertices=[[1,2],[3,4],..]
-      let {center,n,vertexlength,edgelength} = props
+      let {center,n,vertexlength,edgeLength} = props
       let vertices=[];
 
-      if (edgelength) {
-        let vertexlengthFromEdge=2*edgelength*Math.cos(1/2*(1-2/n)*Math.PI);
+      if (edgeLength) {
+        let vertexlengthFromEdge=2*edgeLength*Math.cos(1/2*(1-2/n)*Math.PI);
         vertices=polygonUtils.polygonVerticesFlatBottom(center,n,vertexlengthFromEdge);
       } else {
         vertices=polygonUtils.polygonVerticesFlatBottom(center,n,vertexlength);

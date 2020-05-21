@@ -14,13 +14,13 @@ import Polygon from './Polygon'
 // dx: spacing between x points
 // dy: spacing between y points
 // origin: 2-component vector marking origin of the grid
-// edgelength: length of square edge 
-// vertexlength: length from polygon center to vertices; used if no edgelength provided
-// dx=dy=2*edgelength corresponds to zero gap between squares
+// edgeLength: length of square edge 
+// vertexlength: length from polygon center to vertices; used if no edgeLength provided
+// dx=dy=2*edgeLength corresponds to zero gap between squares
 
 let SquareGrid = (props) => {
 
-    let {nx,ny,dx,dy,origin,edgelength,vertexlength} = props;
+    let {nx,ny,dx,dy,origin,edgeLength,vertexlength} = props;
 
 
     let gridpoints=polygonUtils.squareGrid(nx,ny,dx,dy,origin);
@@ -28,7 +28,7 @@ let SquareGrid = (props) => {
     let gridFill = gridpoints.map((item)=>{
 
         return (
-            <Polygon key={item} center={item} n={4} edgelength={edgelength} vertexlength={vertexlength} {...props}/> //{...props} allows us to pass through, e.g., style props to the SVG
+            <Polygon key={item} center={item} n={4} edgeLength={edgeLength} vertexlength={vertexlength} {...props}/> //{...props} allows us to pass through, e.g., style props to the SVG
         );
     })
     
