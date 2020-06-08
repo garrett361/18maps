@@ -3,27 +3,20 @@
 
 import React, { Component } from 'react';
 // Router
-import { Route, Link, Switch, BrowserRouter as Router } from 'react-router-dom'
+// import { Route, Link, Switch, BrowserRouter as Router } from 'react-router-dom'
 
 // SVG wrapper
-import SVG from './SVG'
 import TileBase from './TileBase'
-import HexBase from './HexBase';
-import Polygon from './Polygon';
 
-
-// Grids
-import SquareGrid from './SquareGrid'
-import HexGridFlat from './HexGridFlat';
-import HexGridFlatLabels from './HexGridFlatLabels';
-
+// Map
+import Map from './Map';
 
 // HexBase utilites
 import * as polygonUtils from './PolygonUtils'
 
 // Set grid parameters
 
-let [nx,ny,origin,edgeLength]=[10,10,[100,100],40];
+let [nx, ny, origin, edgeLength] = [10, 10, [100, 100], 40];
 
 
 class App extends Component {
@@ -32,11 +25,11 @@ class App extends Component {
 
   render() {
 
-    let hexPoints=polygonUtils.hexGridFlat(nx,ny,origin,edgeLength);
-    console.log(hexPoints)
+    let hexPoints = polygonUtils.hexGridFlat(nx, ny, origin, edgeLength);
 
-    let hexFill=hexPoints.map(item=>{
-      return <TileBase center={item} edgeLength={40} borderColor='green' baseColor='yellow'/>
+    // hexFill is just a set of filling hexes for testing
+    let hexFill = hexPoints.map((item, i) => {
+      return <TileBase key={i} center={item} edgeLength={40} borderColor='green' baseColor='yellow' />
     });
 
 
@@ -51,15 +44,18 @@ class App extends Component {
 
 
 
-        <SVG height={2*ny*edgeLength} width={nx*edgeLength*4} style={{ backgroundColor: 'azure'}}>
+        <Map
+          style={{ backgroundColor: 'azure' }}
+          edgeLength={edgeLength}
+          origin={origin}
+          tiles={[
+            { position: ['A', 3], name: 'yellow', rotation: 0 },
+            { position: ['A', 1], name: 'yellow', rotation: 1 },
+            { position: ['D', 2], name: 'green', rotation: 2 },
+            { position: ['F', 3], name: 'green', rotation: 3 }]}
+        >
 
-        <HexGridFlatLabels nx={nx} ny={ny} edgeLength={edgeLength} origin={origin} />
-
-
-          {hexFill}
-
-
-        </SVG>
+        </Map>
 
 
 
