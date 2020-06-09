@@ -14,9 +14,10 @@ class TileBase extends Component {
     render() {
 
         // All necessary props:
-        let { children, edgeLength, borderColor, baseColor, center, rotation } = this.props;
+        let { children, edgeLength, borderColor, baseColor, center, rotation, handleTileClick } = this.props;
         // hex Angle bisecting any vertex
         let hexAngle = Math.PI / 3;
+        
 
 
         // Basic hex on which we will construct more complicated tiles
@@ -40,6 +41,7 @@ class TileBase extends Component {
             return (
                 <g
                     transform={"rotate(" + rotationAngle + " " + center[0] + " " + center[1] + ")"}
+                    onClick={handleTileClick}
                 >
                     <polygon
                         {...props} //This let us feed in whatever other props we want to the polygon, e.gbaseColor. styling
