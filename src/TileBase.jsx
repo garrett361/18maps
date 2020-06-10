@@ -20,7 +20,7 @@ class TileBase extends Component {
     render() {
 
         // All necessary props:
-        let { children, edgeLength, center, rotation, handleTileClick, name } = this.props;
+        let { children, edgeLength, center, rotation, handleTileClick, name, borderColor } = this.props;
 
         // Track dimensions
         // hex Angle bisecting any vertex
@@ -234,7 +234,7 @@ class TileBase extends Component {
                 >
                     <polygon
                         {...props} //This let us feed in whatever other props we want to the polygon, e.gbaseColor. styling
-                        style={{ stroke: tileData.borderColor || 'black', strokeWidth: borderWidth, fill: tileData.baseColor || 'transparent' ,  opacity: tileData.opacity || 1 }}
+                        style={{ stroke: borderColor || tileData.borderColor, strokeWidth: borderWidth, fill: tileData.baseColor || 'transparent', opacity: tileData.opacity || 1 }}
                         points={vertices.map(p => p.join(',')).join(' ')}
                     />
                     {/* Put children inside nested SVG so that they are placed relative to tile's origin */}

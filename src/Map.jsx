@@ -21,64 +21,14 @@ import TileBase from './TileBase'
 
 
 
-// Create an alphabet for the map
-let alphabet1 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
-let alphabet2 = R.map(i => i + i, alphabet1)
-let alphabet3 = R.map(i => i + i + i, alphabet1)
-let alphabet4 = R.map(i => i + i + i + i, alphabet1)
-let alphabet = alphabet1.concat(alphabet2).concat(alphabet3).concat(alphabet4);
-
-
-
 // The Map itself:
 let Map = (props) => {
 
     // accepts an array containing tiles
-    let { tiles, edgeLength, origin, children, handleTileClick } = props;
+    let { tiles, edgeLength, origin, children, handleTileClick, tilePositionToCenter, alphabet, nx, ny } = props;
 
-    // Track dimensions
     // hex Angle bisecting any vertex
     let hexHalfAngle = 1 / 3 * Math.PI;
-    let trackWidth = edgeLength / 10;
-    // Corrections for border:
-    let borderWidth = edgeLength / 25;
-    let edgeBorderCorrected = edgeLength - borderWidth / Math.sin(hexHalfAngle);
-    let hexFlatToFlat = edgeBorderCorrected * Math.tan(hexHalfAngle);
-
-
-    // Find the maximum x position of any tile
-    let nx = 0;
-    tiles.forEach((item) => {
-        let nxcurrent = (R.findIndex(a => a === item.position[0], alphabet) + 1) / 2;
-        if (nxcurrent > nx) {
-            nx = Math.floor(nxcurrent);
-        }
-    });
-
-    // Find the maximum y position of any tile
-    let ny = 0;
-    tiles.forEach((item) => {
-        if (item.position[1] > ny) {
-            ny = Math.floor(item.position[1] + 1);
-        }
-    });
-
-    // Place a hex for each tile in the list
-    // Positioning system
-    let tilePositionToCenter = (position) => {
-
-        // create grid grid hex grid points based on tile data gathered above
-        // hexGridFlat creates nx*ny grid points built in ny rows
-        // where the odd numbered rows are offset
-        let gridpoints = polygonUtils.hexGridFlat(nx, ny, origin, edgeLength);
-
-
-        // The corresponding gridpoint is then:
-        return (
-            gridpoints[(position[1] - 1) * nx + Math.floor((R.findIndex(a => a === position[0], alphabet)) / 2)]
-        );
-    }
-    // 
 
     // From the tile prop, create the corresponding array of hexes
     let tileSVG = tiles.map((item, i) => {
@@ -106,8 +56,6 @@ let Map = (props) => {
 
         let { width, height, viewBox, preserveAspectRatio, style, defs, children } = props
 
-
-
         return (
 
             <svg
@@ -119,29 +67,6 @@ let Map = (props) => {
                 style={style}
                 {...namespaces}
             >
-                <defs>
-                    {defs}
-                    {/* track */}
-                    <line id="straight" x1={0} y1={-hexFlatToFlat / 2} x2={0} y2={hexFlatToFlat / 2} stroke='black' strokeWidth={trackWidth} />
-                    <path
-                        id="sharp"
-                        d={"M 0 " + hexFlatToFlat / 2 + " " +
-                            "A " + edgeBorderCorrected / 2 + " " + edgeBorderCorrected / 2 + " 0 0 1 " + 3 / 4 * edgeBorderCorrected + " " + Math.sqrt(3) / 4 * edgeBorderCorrected}
-                        fill="transparent"
-                        stroke="black"
-                        strokeWidth={trackWidth}
-                    />
-                    <path
-                        id="gentle"
-                        d={"M 0 " + hexFlatToFlat / 2 + " " +
-                            "A " + 3 / 2 * edgeBorderCorrected + " " + 3 / 2 * edgeBorderCorrected + " 0 0 1 " + 3 / 4 * edgeBorderCorrected + " " + -Math.sqrt(3) / 4 * edgeBorderCorrected}
-                        fill="transparent"
-                        stroke="black"
-                        strokeWidth={trackWidth}
-                    />
-                    {/* revenue locations */}
-                    <circle id="myCircle" cx="0" cy="0" r="5" />
-                </defs>
                 {children}
             </svg>
 
@@ -231,8 +156,6 @@ let Map = (props) => {
             width={nx * edgeLength * 4.25}
         >
 
-            {children}
-
             <HexGridFlatLabels
                 origin={origin}
                 testtest={edgeLength}
@@ -241,6 +164,8 @@ let Map = (props) => {
             />
 
             {tileSVG}
+
+            {children}
 
         </SVG>
     )

@@ -106,19 +106,13 @@ export let squareGrid = (nx, ny, dx, dy, origin) => {
 // center: a two-component vector labeling the center of the polygon
 // nx/ny: number of tiles in x and y directions
 // sidelength: lenth of any one edge of the polygon
-// vertexlength: length of vector from center to any one of the polygon's vertices; used if edgelenth not provided
-export let hexGridFlat = (nx, ny, origin, edgeLength, vertexlength) => {
+export let hexGridFlat = (nx, ny, origin, edgeLength) => {
 
 
     let hexhalfangle = 1 / 3 * Math.PI;
 
-    if (edgeLength) {
-        var dy = edgeLength * Math.tan(hexhalfangle) / 2;
-        var dx = edgeLength + edgeLength / Math.cos(hexhalfangle);
-    } else {
-        var dy = vertexlength * Math.sin(hexhalfangle);
-        var dx = 2 * vertexlength + 2 * Math.cos(hexhalfangle) * vertexlength;
-    }
+    var dy = edgeLength * Math.tan(hexhalfangle) / 2;
+    var dx = edgeLength + edgeLength / Math.cos(hexhalfangle);
 
     let squaregridpoints = squareGrid(nx, ny, dx, dy, origin);
 
