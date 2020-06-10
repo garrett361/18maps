@@ -5,8 +5,10 @@ import React, { Component } from 'react';
 // Router
 // import { Route, Link, Switch, BrowserRouter as Router } from 'react-router-dom'
 
-// SVG wrapper
+// Basic tile element
 import TileBase from './TileBase'
+// import set of all tiles
+import tileSet from './data/tiles/tileSet'
 
 // Map
 import Map from './Map';
@@ -20,10 +22,20 @@ let [nx, ny, origin, edgeLength] = [10, 10, [100, 100], 40];
 // initial state
 let initialState = {
   tiles: [
-    { position: ['A', 3], name: 'yellow', rotation: 0, components: ['myCircle'] },
-    { position: ['A', 1], name: 'yellow', rotation: 1, components: ['myCircle','myLine'] },
-    { position: ['D', 2], name: 'yellow', rotation: 2, components: ['myCircle'] },
-    { position: ['F', 3], name: 'yellow', rotation: 3, components: ['myLine'] }]
+    { position: ['A', 1], name: '5', rotation: 0 },
+    { position: ['A', 3], name: 'blank' },
+    { position: ['B', 2], name: 'blank' },
+    { position: ['B', 4], name: 'blank' },
+    { position: ['C', 1], name: 'blank' },
+    { position: ['C', 3], name: 'blank' },
+    { position: ['D', 2], name: 'blank' },
+    { position: ['D', 4], name: 'blank' },
+    { position: ['E', 3], name: '57', rotation: 0 },
+    { position: ['E', 1], name: 'blank', rotation: 0 },
+    { position: ['F', 2], name: 'blank' },
+    { position: ['F', 4], name: 'blank' },
+    { position: ['G', 5], name: 'blank' },
+  ]
 };
 
 
@@ -34,35 +46,24 @@ class App extends Component {
   // handling tile clicks
   handleTileClick = (i) => {
     let currentTiles = this.state.tiles;
-    currentTiles[i].name = 'green';
     currentTiles[i].rotation = (currentTiles[i].rotation + 1) % 6;
     this.setState({ tiles: currentTiles });
+
+
+
   }
+
 
 
   render() {
 
     let { tiles } = this.state;
 
-    let hexPoints = polygonUtils.hexGridFlat(nx, ny, origin, edgeLength);
-
-    // hexFill is just a set of filling hexes for testing
-    let hexFill = hexPoints.map((item, i) => {
-      return <TileBase key={i} center={item} edgeLength={40} borderColor='green' baseColor='yellow' />
-    });
-
-
-
-
     return (
-
-
 
       <div className="container">
 
         <h1>Polygons</h1>
-
-
 
         <Map
           style={{ backgroundColor: 'azure' }}
@@ -73,9 +74,6 @@ class App extends Component {
         >
 
         </Map>
-
-
-
       </div >
 
     );

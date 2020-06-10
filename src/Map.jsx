@@ -18,7 +18,7 @@ import * as polygonUtils from './PolygonUtils'
 
 // Basic hex tiles
 import TileBase from './TileBase'
-import tileSet from './data/tiles/tileSet'
+
 
 
 // Create an alphabet for the map
@@ -35,12 +35,23 @@ let Map = (props) => {
 
     // accepts an array containing tiles
     let { tiles, edgeLength, origin, children, handleTileClick } = props;
+
+    // Track dimensions
+    // hex Angle bisecting any vertex
+    let hexHalfAngle = 1 / 3 * Math.PI;
+    let trackWidth = edgeLength / 10;
+    // Corrections for border:
+    let borderWidth = edgeLength / 25;
+    let edgeBorderCorrected = edgeLength - borderWidth / Math.sin(hexHalfAngle);
+    let hexFlatToFlat = edgeBorderCorrected * Math.tan(hexHalfAngle);
+
+
     // Find the maximum x position of any tile
     let nx = 0;
     tiles.forEach((item) => {
         let nxcurrent = (R.findIndex(a => a === item.position[0], alphabet) + 1) / 2;
         if (nxcurrent > nx) {
-            nx = nxcurrent;
+            nx = Math.floor(nxcurrent);
         }
     });
 
@@ -48,7 +59,7 @@ let Map = (props) => {
     let ny = 0;
     tiles.forEach((item) => {
         if (item.position[1] > ny) {
-            ny = item.position[1];
+            ny = Math.floor(item.position[1] + 1);
         }
     });
 
@@ -61,6 +72,7 @@ let Map = (props) => {
         // where the odd numbered rows are offset
         let gridpoints = polygonUtils.hexGridFlat(nx, ny, origin, edgeLength);
 
+
         // The corresponding gridpoint is then:
         return (
             gridpoints[(position[1] - 1) * nx + Math.floor((R.findIndex(a => a === position[0], alphabet)) / 2)]
@@ -71,23 +83,14 @@ let Map = (props) => {
     // From the tile prop, create the corresponding array of hexes
     let tileSVG = tiles.map((item, i) => {
 
-        // Based on the tile name, pull the tile data 
-        let tileData = R.find(R.propEq('name', item.name), tileSet);
-
-        let tileComponents = [];
-        if (item.components) {
-            tileComponents = item.components.map((i,j) => {
-                return (
-                    <use key={j} xlinkHref={"#" + i} />
-                )
-            });
-        };
-        
-
         return (
-            <TileBase key={item.position} center={tilePositionToCenter(item.position)} edgeLength={edgeLength} borderColor='green' baseColor={tileData.color} rotation={item.rotation} handleTileClick={() => { handleTileClick(i) }} >
-                
-                {tileComponents && tileComponents}
+            <TileBase
+                key={item.position}
+                center={tilePositionToCenter(item.position)}
+                edgeLength={edgeLength}
+                rotation={item.rotation}
+                name={item.name}
+                handleTileClick={() => { handleTileClick(i) }} >
             </TileBase>
         );
     });
@@ -104,6 +107,7 @@ let Map = (props) => {
         let { width, height, viewBox, preserveAspectRatio, style, defs, children } = props
 
 
+
         return (
 
             <svg
@@ -117,8 +121,26 @@ let Map = (props) => {
             >
                 <defs>
                     {defs}
+                    {/* track */}
+                    <line id="straight" x1={0} y1={-hexFlatToFlat / 2} x2={0} y2={hexFlatToFlat / 2} stroke='black' strokeWidth={trackWidth} />
+                    <path
+                        id="sharp"
+                        d={"M 0 " + hexFlatToFlat / 2 + " " +
+                            "A " + edgeBorderCorrected / 2 + " " + edgeBorderCorrected / 2 + " 0 0 1 " + 3 / 4 * edgeBorderCorrected + " " + Math.sqrt(3) / 4 * edgeBorderCorrected}
+                        fill="transparent"
+                        stroke="black"
+                        strokeWidth={trackWidth}
+                    />
+                    <path
+                        id="gentle"
+                        d={"M 0 " + hexFlatToFlat / 2 + " " +
+                            "A " + 3 / 2 * edgeBorderCorrected + " " + 3 / 2 * edgeBorderCorrected + " 0 0 1 " + 3 / 4 * edgeBorderCorrected + " " + -Math.sqrt(3) / 4 * edgeBorderCorrected}
+                        fill="transparent"
+                        stroke="black"
+                        strokeWidth={trackWidth}
+                    />
+                    {/* revenue locations */}
                     <circle id="myCircle" cx="0" cy="0" r="5" />
-                    <line id="myLine" x1={0} y1={-edgeLength / 2} x2={0} y2={edgeLength / 2} stroke='black' strokeWidth={edgeLength/15}  />
                 </defs>
                 {children}
             </svg>
@@ -132,8 +154,6 @@ let Map = (props) => {
     let HexGridFlatLabels = (props) => {
 
         let { nx, ny, origin, testtest } = props;
-
-        let hexHalfAngle = 1 / 3 * Math.PI;
 
         let dy = testtest * Math.tan(hexHalfAngle) / 2;
         let dx = testtest + testtest / Math.cos(hexHalfAngle);
@@ -169,7 +189,7 @@ let Map = (props) => {
         let xlabels = xlabelstop.concat(xlabelsbottom);
 
         // Create array of y-label positions for left of grid
-        let ypointsleft = [polygonUtils.vectoradd(origin, [-dx * .5, 0])];
+        let ypointsleft = [polygonUtils.vectoradd(origin, [-dx * .5, dy / 5])];
         for (let i = 0; i < ny - 1; i++) {
             ypointsleft.push(polygonUtils.vectoradd(ypointsleft[ypointsleft.length - 1], [0, dy]));
         };
