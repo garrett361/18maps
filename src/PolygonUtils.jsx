@@ -7,6 +7,11 @@ export let vectoradd = (a, b) => {
     return a.map((e, i) => e + b[i]);
 };
 
+// vector subtraction
+export let vectorsubtract = (a,b) => {
+    return a.map((e,i) => e - b[i]);
+};
+
 // dot product
 export let dotproduct = (a, b) => {
     return a.map((e, i) => e * b[i]).reduce((c, d) => c + d, 0);

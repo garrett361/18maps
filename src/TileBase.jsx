@@ -20,23 +20,23 @@ class TileBase extends Component {
     render() {
 
         // All necessary props:
-        let { children, edgeLength, center, rotation, handleTileClick, name, borderColor } = this.props;
+        let { children, edgelength, center, rotation, handleTileClick, name, borderColor } = this.props;
 
         // Track dimensions
         // hex Angle bisecting any vertex
         let hexHalfAngle = 1 / 3 * Math.PI;
-        // include a border color and recompute the edgeLength to account for borderColor thickening
-        let borderWidth = edgeLength / 40;
-        let edgeBorderCorrected = edgeLength - 1 / 2 * borderWidth / Math.sin(hexHalfAngle);
+        // include a border color and recompute the edgelength to account for borderColor thickening
+        let borderWidth = edgelength / 40;
+        let edgeBorderCorrected = edgelength - 1 / 2 * borderWidth / Math.sin(hexHalfAngle);
 
 
         // dimensions for track and other elements
         let hexInnerFlatToFlat = edgeBorderCorrected * Math.tan(hexHalfAngle) - borderWidth;
         let hexInnerEdgeLength = hexInnerFlatToFlat / Math.tan(hexHalfAngle);
-        let trackWidth = edgeLength / 7;
-        let trackWidthInner = edgeLength / 10;
-        let cityRadius = edgeLength / 4;
-        let cityStroke = edgeLength / 30;
+        let trackWidth = edgelength / 7;
+        let trackWidthInner = edgelength / 10;
+        let cityRadius = edgelength / 4;
+        let cityStroke = edgelength / 30;
         let cityRadiusTotal = cityRadius + cityStroke / 2;
 
         // triple city geometry
@@ -131,8 +131,8 @@ class TileBase extends Component {
             let { color } = props;
             return (
                 <g >
-                    <line x1={0} y1={edgeLength / 4} x2={0} y2={-edgeLength / 4} strokeWidth={2 * cityRadius + cityStroke} stroke='black' />
-                    <line x1={0} y1={edgeLength / 4} x2={0} y2={-edgeLength / 4} strokeWidth={2 * cityRadius - cityStroke} stroke='lightgray' />
+                    <line x1={0} y1={edgelength / 4} x2={0} y2={-edgelength / 4} strokeWidth={2 * cityRadius + cityStroke} stroke='black' />
+                    <line x1={0} y1={edgelength / 4} x2={0} y2={-edgelength / 4} strokeWidth={2 * cityRadius - cityStroke} stroke='lightgray' />
                     <circle cx="0" cy={cityRadiusTotal} r={cityRadius} strokeWidth={cityStroke} stroke='black' fill={color || 'white'} />
                     <circle cx="0" cy={-cityRadius - cityStroke / 2} r={cityRadius} strokeWidth={cityStroke} stroke='black' fill={color || 'white'} />
                 </g>
@@ -161,10 +161,10 @@ class TileBase extends Component {
             let { color } = props;
             return (
                 <g id="quadruplecity">
-                    <line x1={0} y1={edgeLength / 4} x2={0} y2={-edgeLength / 4} strokeWidth={4 * cityRadius + 2 * cityStroke} stroke='black' />
-                    <line x1={0} y1={edgeLength / 4} x2={0} y2={-edgeLength / 4} strokeWidth={4 * cityRadius} stroke='lightgray' />
-                    <line y1={0} x1={edgeLength / 4} y2={0} x2={-edgeLength / 4} strokeWidth={4 * cityRadius + 2 * cityStroke} stroke='black' />
-                    <line y1={0} x1={edgeLength / 4} y2={0} x2={-edgeLength / 4} strokeWidth={4 * cityRadius} stroke='lightgray' />
+                    <line x1={0} y1={edgelength / 4} x2={0} y2={-edgelength / 4} strokeWidth={4 * cityRadius + 2 * cityStroke} stroke='black' />
+                    <line x1={0} y1={edgelength / 4} x2={0} y2={-edgelength / 4} strokeWidth={4 * cityRadius} stroke='lightgray' />
+                    <line y1={0} x1={edgelength / 4} y2={0} x2={-edgelength / 4} strokeWidth={4 * cityRadius + 2 * cityStroke} stroke='black' />
+                    <line y1={0} x1={edgelength / 4} y2={0} x2={-edgelength / 4} strokeWidth={4 * cityRadius} stroke='lightgray' />
                     <circle cx={-cityRadius - cityStroke / 2} cy={cityRadiusTotal} r={cityRadius} strokeWidth={cityStroke} stroke='black' fill={color || 'white'} />
                     <circle cx={cityRadiusTotal} cy={cityRadiusTotal} r={cityRadius} strokeWidth={cityStroke} stroke='black' fill={color || 'white'} />
                     <circle cx={-cityRadius - cityStroke / 2} cy={-cityRadius - cityStroke / 2} r={cityRadius} strokeWidth={cityStroke} stroke='black' fill={color || 'white'} />
@@ -174,9 +174,39 @@ class TileBase extends Component {
         };
 
 
+        // Basic revenue marker
+        let RevenueMarker = (props) => {
+            let { rotation, value } = props;
+            let placementRadius = edgelength / 1.4;
+            let x = -placementRadius * Math.sin((rotation + 5 / 2) * hexHalfAngle);
+            let y = placementRadius * Math.cos((rotation + 5 / 2) * hexHalfAngle);
+            let revenueRadius = edgelength / 7;
+            let revenueStroke = edgelength / 50;
+            let valuelength = value.toString().length;
+            let revenueFont = edgelength / (2.5 * valuelength);
+            return (
+                <g>
+                    <circle cx={x} cy={y} r={revenueRadius} strokeWidth={revenueStroke} stroke='black' fill={'white'} />
+                    <text x={x} y={y} dominantBaseline="middle" textAnchor="middle" fontSize={revenueFont} >{value}</text>
+                </g>
+            );
+        };
+
+        // Tokens
+        let Token = (props) => {
+            let { color, center, text, fontColor } = props;
+            return (
+                <g>
+                    <circle cx={center[0]} cy={center[1]} r={cityRadius * 10 / 11} fill={color || 'white'} />
+                    <text x={center[0]} y={center[1]} dominantBaseline="middle" textAnchor="middle" fontSize={edgelength / 4} fill={fontColor || 'black'} >{text || " "}</text>
+                </g>
+            );
+        };  
+
+
         // Basic hex on which we will construct more complicated tiles
         // center: a two-component vector labeling the center of the polygon
-        // edgeLength: length of any one edge of the hexagon (this is the same as the length from the hex center to any vertex)
+        // edgelength: length of any one edge of the hexagon (this is the same as the length from the hex center to any vertex)
         let HexBase = (props) => {
             // HexBase vertices in coordinate pairs as 2-components arrays within arrays, e.g.
             // vertices=[[1,2],[3,4],..]
@@ -249,7 +279,7 @@ class TileBase extends Component {
                         {tileRevenue && tileRevenue}
                         {tileLabels && tileLabels}
                         {/* tile number */}
-                        {tileDisplayName && <text x={edgeLength / 3} y={edgeLength * 2 / 3} textAnchor="middle" dominantBaseline="middle" fontSize={edgeLength / 5}>{tileDisplayName}</text>}
+                        {tileDisplayName && <text x={edgelength / 3} y={edgelength * 2 / 3} textAnchor="middle" dominantBaseline="middle" fontSize={edgelength / 5}>{tileDisplayName}</text>}
                     </svg>
                 </g>
             );
